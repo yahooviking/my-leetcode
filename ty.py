@@ -2,7 +2,6 @@ from multiprocessing.dummy import Array
 from typing import List
 import math
 
-from pyparsing import nums
 
 
 class Solution(object):
@@ -347,16 +346,40 @@ class Solution(object):
         reverse(0, k - 1)
         reverse(k, len(nums) - 1)
 
+
+    # 121. Best Time to Buy and Sell Stock
+    # 122. Best Time to Buy and Sell Stock II
+    def maxProfit(self, prices):
+        # buy = prices[0]
+        # profit = 0
+        # for i in range(1, len(prices)):
+        #     if prices[i] < buy:
+        #         buy = prices[i]
+        #     elif prices[i] - buy > profit:
+        #         profit = prices[i] - buy
+        # return profit
+            
+        profit = 0
+        for i in range(1, len(prices)):
+            if prices[i] > prices[i - 1]:
+                profit += prices[i] - prices[i - 1]
+        return profit
+    
+    # 55. Jump Game
+    def canJump(self, nums):
+        reach = nums[-1]
+        for i in range (len(nums)-1, -1,-1):
+            
+
+
+
+
         
 def main():    
     solution = Solution()
-    solution.rotate(
-[1,2,3,4,5,6,7]
-
-, 
-
-        4
-        )
+    solution.maxProfit(
+[2,3,1,1,4]
+      )
 
 if __name__ == "__main__":
     main()
