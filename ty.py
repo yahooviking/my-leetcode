@@ -367,18 +367,87 @@ class Solution(object):
     
     # 55. Jump Game
     def canJump(self, nums):
-        reach = nums[-1]
-        for i in range (len(nums)-1, -1,-1):
-            
+        # jumps = [0] * len(nums)
+        # jumps[-1] = 1
+        j = len(nums) - 1
+        for i in range (len(nums)-2, -1, -1):
+            if nums[i] >= j - i:
+                j = i
+                # jumps[i] = 1
+        if not j or len(nums) == 1:
+            return True
+        else: 
+            return False
+
+    # 45. Jump Game II
+    def jump(self, nums):
+        # j = len(nums) - 1
+        # max_i = j
+        # count = 0
+        # while j > 0:
+        #     for i in range (j-1, -1, -1):
+        #         if nums[i] >= j - i:
+        #             max_i = i
+        #     j = max_i
+        #     count += 1
+        # return count
+        n = len(nums)
+        if n <= 1:
+            return 0
+
+        jumps = 0
+        curr_end = 0   # end of current jump range
+        max_reach = 0  # farthest index we can reach while scanning this range
+
+        # We only need to process until n-2, because once we can reach last index,
+        # we stop. No need to jump from the last index itself.
+        for i in range(n - 1):
+            max_reach = max(max_reach, i + nums[i])
+
+            # Time to take one jump: we finished scanning current range.
+            if i == curr_end:
+                jumps += 1
+                curr_end = max_reach
+
+                # Optimization: if this jump can reach/past last index, done.
+                if curr_end >= n - 1:
+                    break
+
+        return jumps        
 
 
+    # 274. H-Index
+    def hIndex(self, citations):
+        # citations = sorted(citations, reverse=True)
+        # i = 0
+        # n = len(citations)
+        # while i < n and citations[i] > i:
+        #     i += 1
+        # return i
+
+        n = len(citations)
+        count = [0] * (n + 1)
+        
+        for c in citations:
+            if c >= n:
+                count[n] += 1
+            else:
+                count[c] += 1
+        
+        total = 0
+        for i in range(n, -1, -1):
+            total += count[i]
+            if total >= i:
+                return i
+        
+        return 0
 
 
         
 def main():    
     solution = Solution()
-    solution.maxProfit(
-[2,3,1,1,4]
+    solution.hIndex(
+[1,3,1]
       )
 
 if __name__ == "__main__":
