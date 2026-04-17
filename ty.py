@@ -1,4 +1,5 @@
 from multiprocessing.dummy import Array
+from random import choice
 from typing import List
 import math
 
@@ -442,13 +443,94 @@ class Solution(object):
         
         return 0
 
+    # 238. Product of Array Except Self
+    def productExceptSelf(self, nums):
+        n = len(nums)
+        answer = [1] * n
+        right, left = 1, 1
+        for i in range (n):
+            answer[i] *= left
+            left *= nums[i]
+             
+        for i in range (n - 1, -1, -1):
+            answer[i] *= right
+            right *= nums[i]
+
+        return answer
+    
+    # 134. Gas Station
+    def canCompleteCircuit(self, gas, cost):
+        n = len(gas)
+        
+        if sum(gas) >= sum(cost):
+            current_gas = 0
+            start = 0
+                
+            for i in range (n):
+                current_gas += gas[i] - cost[i]
+                if current_gas < 0:
+                    current_gas = 0
+                    start = i + 1
+            return start
+        else: return -1
+         
+
+
+
+# 380. Insert Delete GetRandom O(1) 
+class RandomizedSet(object):
+
+    def __init__(self):
+        self.nums = []
+        self.indices = {}
+
+    def insert(self, val):
+        if val not in self.indices:
+            self.indices[val] = len(self.nums)
+            self.nums.append(val)
+
+            return True
+        else:
+            return False
+        
+
+    def remove(self, val):
+        if val in self.indices:
+            i = self.indices[val]
+            last = self.nums[-1]
+            self.nums[i] = last
+            self.indices[last] = i
+            self.nums.pop() 
+            del self.indices[val]            
+
+            return True
+        else:
+            return False
+
+
+    def getRandom(self):
+        return choice(self.nums)
+        
+
 
         
 def main():    
     solution = Solution()
-    solution.hIndex(
-[1,3,1]
+    solution.canCompleteCircuit(
+[1,2,3,4,5]
+,
+[3,4,5,1,2]
       )
+
+    # obj = RandomizedSet()
+    # param_1 = obj.insert(1)
+    # param_2 = obj.remove(2)
+    # param_1 = obj.insert(2)
+    # param_3 = obj.getRandom()
+    # param_2 = obj.remove(1)
+    # param_1 = obj.insert(2)
+    # param_3 = obj.getRandom()
+
 
 if __name__ == "__main__":
     main()
