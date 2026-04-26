@@ -475,6 +475,134 @@ class Solution(object):
         else: return -1
          
 
+    # 135. Candy  
+    def candy(self, ratings):
+        n =  len(ratings)
+        candies = [1] * n
+        for i in range (1, n):
+            if ratings[i] > ratings[i-1]:
+                candies[i] = candies[i-1] + 1
+        for i in range (n-2, -1, -1):
+            if ratings[i] > ratings[i+1]:
+                candies[i] = max(candies[i],candies[i+1]+1)
+
+        return sum(candies)
+
+    # 42. Trapping Rain Water
+    def trap(self, height):
+        '''n = len(height)
+        max_local = []
+        # min_local = []
+        sign = '+'
+        answer = 0
+
+        for i in range (1, n):
+            if height[i] > height[i-1] and sign == '-':
+                # min_local.append(i-1)
+                sign = '+'
+            elif height[i] < height[i-1] and sign == '+':
+                max_local.append(i-1)
+                sign = '-'
+        if sign == '+':
+            max_local.append(n-1)
+        # else:
+        #     min_local.append(n-1)
+        
+        it = 1
+        while it != len(max_local)-1:
+            if height[max_local[it-1]] > height[max_local[it]] < height[max_local[it+1]]:
+                max_local.pop(it)
+                
+            else : it += 1
+
+        for x in range (len(max_local)-1):
+            l = max_local[x]
+            r = max_local[x+1]
+
+            subtrahend = height[l:r+1]
+
+            minimum = min(height[l], height[r])
+            for i in range (len(subtrahend)):
+                if subtrahend[i] > minimum:
+                    subtrahend[i] = minimum
+            
+            minuend = [subtrahend[0]] * (r - l + 1)
+            
+            difference = [a - b for a, b in zip(minuend, subtrahend)]
+            answer += sum(difference)
+
+            
+        return answer '''
+        l = 0
+        r = len(height) - 1
+        left_max = height[l]
+        right_max = height[r]
+        answer = 0
+        while l < r:
+            if left_max < right_max:
+                l += 1
+                left_max = max(left_max, height[l])
+                answer += left_max - height[l]   
+            else:
+                r -= 1
+                right_max = max(right_max, height[r])
+                answer += right_max - height[r]
+        return answer
+
+
+
+    # two pointers special
+
+    # 5. Longest Palindromic Substring
+    def longestPalindrome(self, s):
+        if not s:
+            return ""
+        
+        def expand_from_center(s: str, left: int, right: int):
+            while left >= 0 and right < n and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return right - left - 1
+
+
+        start, end = 0, 0
+        n = len(s)
+        
+        for i in range (n):
+            odd = expand_from_center(s, i, i)
+            even = expand_from_center(s, i, i+1)
+            max_len = max(odd, even)
+
+            if max_len > end - start:
+                start = i - (max_len - 1) // 2
+                end = i + max_len // 2
+            
+        return s[start:end+1]
+
+    # 11. Container With Most Water
+    def maxArea(self, height: List[int]) -> int:
+        left = 0
+        right = len(height)-1
+        water = min(height[left], height[right]) * (right - left)
+        left_max = height[left]
+        right_max = height[right]
+        max_water = water
+        while left < right:
+
+            if left_max < right_max:
+                left += 1
+                left_max = max(left_max, height[left])
+            else:
+                right -= 1
+                right_max = max(right_max, height[right])
+
+            water = min(height[left], height[right]) * (right - left)
+            if water > max_water:
+                max_water = water
+
+        
+        return max_water
+
 
 
 # 380. Insert Delete GetRandom O(1) 
@@ -516,21 +644,9 @@ class RandomizedSet(object):
         
 def main():    
     solution = Solution()
-    solution.canCompleteCircuit(
-[1,2,3,4,5]
-,
-[3,4,5,1,2]
+    solution.maxArea(
+[1,1]
       )
-
-    # obj = RandomizedSet()
-    # param_1 = obj.insert(1)
-    # param_2 = obj.remove(2)
-    # param_1 = obj.insert(2)
-    # param_3 = obj.getRandom()
-    # param_2 = obj.remove(1)
-    # param_1 = obj.insert(2)
-    # param_3 = obj.getRandom()
-
 
 if __name__ == "__main__":
     main()
