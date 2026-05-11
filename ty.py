@@ -1,9 +1,12 @@
 from multiprocessing.dummy import Array
 from random import choice
-from typing import List
+from typing import List, Optional
 import math
 
-
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
 
 class Solution(object):
     # 1768. Merge Strings Alternately
@@ -603,9 +606,170 @@ class Solution(object):
         
         return max_water
 
+    # 15. 3Sum
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
+        # def sorting_array(nums: list[int]) -> list[list[int]]:
+        # indices = {}
+        # for i in range (len(nums)):
 
 
-# 380. Insert Delete GetRandom O(1) 
+        nums.sort()
+
+        triplets = []
+        
+        for left in range (len(nums)):
+            if left > 0 and nums[left] == nums[left-1]:
+                continue
+            middle = left+1
+            right = len(nums)-1
+            while middle < right:
+                summ = nums[left] + nums[middle] + nums[right] 
+                if summ < 0:
+                    middle += 1
+                elif summ > 0: 
+                    right -= 1
+                elif summ == 0:
+                    triplets.append([nums[left], nums[middle], nums[right]] )
+                    middle += 1
+                    while nums[middle] == nums[middle-1] and middle < right:
+                        middle += 1
+
+            
+
+        return triplets
+    
+    # 16. 3Sum Closest
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        difference = []
+        for left in range (len(nums)-1):
+            middle = left + 1
+            right = len(nums) - 1
+            while middle < right:
+                summ = nums[left] + nums[middle] + nums[right]
+                if (len(difference) > 0 and abs(summ - target) < difference[-1]) or len(difference) == 0:
+                    difference.append(abs(summ - target))
+                    answer = summ
+
+                if summ < target:
+                    middle += 1
+                elif summ > target: 
+                    right -= 1
+                else:
+                    return answer
+        return answer
+
+    # 18. 4Sum
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        nums.sort()
+
+        quadruplets = []
+        
+        for a in range (len(nums)-3):
+            if a > 0 and nums[a] == nums[a-1]:
+                continue
+            for b in range (a+1, len(nums)-2):
+                if b > a+1 and nums[b] == nums[b-1]:
+                    continue
+                c = b+1
+                d = len(nums)-1
+                while c < d:
+                    summ = nums[a] + nums[c] + nums[d] + nums[b]
+
+                    if summ == target:
+                        quadruplets.append([nums[a], nums[b], nums[c], nums[d]])
+                        c += 1
+                        while nums[c] == nums[c-1] and c < d:
+                            c += 1
+                    elif summ < target:
+                        c += 1
+                        while nums[c] == nums[c-1] and c < d:
+                            c += 1
+                    elif summ > target: 
+                        d -= 1
+                        while nums[d] == nums[d+1] and c < d:
+                            d -= 1
+
+            
+
+        return quadruplets
+
+    # 19. Remove Nth Node From End of List
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        """
+        :type head: Optional[ListNode]
+        :type n: int
+        :rtype: Optional[ListNode]
+        """
+        fast, slow = head, head
+
+        for i in range (n):
+            fast = fast.next
+        if not fast: return head.next
+        while fast.next is not None:
+            fast = fast.next
+            slow = slow.next
+        slow.next = slow.next.next
+        return head
+            
+    # 31. Next Permutation
+    def nextPermutation(self, nums):
+        n = len(nums)
+        arr = []
+        k, l = None, None
+        for i in range (n-2, -1, -1):
+            if nums[i] < nums[i + 1]:
+                k = i
+                break
+        if k is None:
+            nums.sort()
+        else:
+            for j in range (n-1, -1, -1):
+                if nums[j] > nums[k]:
+                    l = j
+                    break
+            nums[k], nums[l] = nums[l], nums[k]
+            arr = nums[k+1:n]
+            arr.reverse()
+            nums[k+1:] = arr
+        
+    # 61. Rotate List
+    def rotateRight(self, head, k):
+        if not head or not head.next or k == 0:
+            return head
+        length = 1
+        tail = head
+        while tail.next:
+            tail = tail.next
+            length += 1
+        k %= length
+        if k == 0:
+            return head
+        tail.next = head
+        steps = length - k - 1
+        new_tail = head
+        for _ in range(steps):
+            new_tail = new_tail.next
+        new_head = new_tail.next
+        new_tail.next = None
+        return new_head
+
+    # 75. Sort Colors
+    def sortColors(self, nums):
+        zeros, twos = 0, len(nums)-1
+        p = 0
+        while p <= twos:
+            if nums[p] == 0:
+                nums[zeros], nums[p] = nums[p], nums[zeros]
+                zeros += 1
+            if nums[p] == 2:
+                nums[twos], nums[p] = nums[p], nums[twos]
+                twos -= 1
+            else: p += 1
+        
+
+
+'''# 380. Insert Delete GetRandom O(1) 
 class RandomizedSet(object):
 
     def __init__(self):
@@ -638,15 +802,27 @@ class RandomizedSet(object):
 
     def getRandom(self):
         return choice(self.nums)
-        
+        '''
 
+def build_linked_list(arr):
+    dummy = ListNode(0)
+    current = dummy
+    for val in arr:
+        current.next = ListNode(val)
+        current = current.next
+    return dummy.next
 
         
 def main():    
     solution = Solution()
-    solution.maxArea(
-[1,1]
-      )
+    # head = build_linked_list([1,2,3,4,5])
+    solution.sortColors(
+[2,2,2,1,1,0,0,1,0,1,0,2,1,0,2,1,0,2,1,1]
+
+
+
+    )
+
 
 if __name__ == "__main__":
     main()
