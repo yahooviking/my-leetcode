@@ -767,6 +767,112 @@ class Solution(object):
                 twos -= 1
             else: p += 1
         
+    # 82. Remove Duplicates from Sorted List II
+    def deleteDuplicates(self, head):
+        dummy = pre = ListNode(0)
+        dummy.next = head
+        while head and head.next:
+            if head.val == head.next.val:
+                while head and head.next and head.val == head.next.val:
+                    head = head.next
+                head = head.next
+                pre.next = head
+            else:
+                pre = pre.next
+                head = head.next
+        return dummy.next
+
+    # 86. Partition List
+    def partition(self, head, x):
+        less = head
+        ansdummy = ListNode(0)
+        biggerdummy = ListNode(0)
+        answer = ansdummy
+        bigger = biggerdummy
+        
+
+        while less:
+            if less.val < x: 
+                ansdummy.next = ListNode(less.val)
+                ansdummy = ansdummy.next
+            elif less.val >= x:
+                biggerdummy.next = ListNode(less.val)
+                biggerdummy = biggerdummy.next
+            less = less.next
+        ansdummy.next = bigger.next
+
+        return answer.next
+
+    # 125. Valid Palindrome
+    def isPalindrome(self, s):
+        string = ""
+        for x in s:
+            if 48 <= ord(x) <= 57:
+                string += x
+            elif 65 <= ord(x) <= 90:
+                string += chr(ord(x) + 32)
+            elif 97 <= ord(x) <= 122:
+                string += x
+
+        start, end = 0, len(string)
+        while start < end:
+            if string[start] == string[end-1]:
+                start += 1
+                end -= 1
+            else:
+                return False
+        return True
+
+    # 141. Linked List Cycle
+    def hasCycle(self, head):
+        fast = head
+        slow = ListNode(0, head)
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                return True
+        return False
+    
+    # 142. Linked List Cycle II
+    def detectCycle(self, head):
+        fast = slow = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                break
+        else:
+            return None
+        while head != slow:
+            head, slow = head.next, slow.next
+        return head
+        
+
+    # 143. Reorder List
+    def reorderList(self, head):
+        stack = []
+        count = 0
+        stack_dummy = head
+        tail = head.next
+        while stack_dummy:
+            stack.append(ListNode(stack_dummy.val))
+            stack_dummy = stack_dummy.next
+        reorder_dummy = head
+        length = len(stack)
+        while count < length // 2:  
+            reorder_dummy.next = stack[-1]
+            stack.pop()
+            count += 1
+            if count < length // 2:
+                reorder_dummy.next.next = ListNode(tail.val)#get this tail done
+                tail = tail.next
+                reorder_dummy = reorder_dummy.next.next
+        if length % 2 and count > 0:
+            reorder_dummy.next.next = ListNode(tail.val)
+
+
+    # 148. Sort List
 
 
 '''# 380. Insert Delete GetRandom O(1) 
@@ -812,12 +918,28 @@ def build_linked_list(arr):
         current = current.next
     return dummy.next
 
+def build_cycled_linked_list(arr, index):
+    node = 0
+    dummy = ListNode(0)
+    current = dummy
+    for val in arr:
+        current.next = ListNode(val)
+        
+        if node == index:
+            temp = current.next
+        node += 1
+        
+        current = current.next
+    current.next = temp
+
+    return dummy.next
+
         
 def main():    
     solution = Solution()
-    # head = build_linked_list([1,2,3,4,5])
-    solution.sortColors(
-[2,2,2,1,1,0,0,1,0,1,0,2,1,0,2,1,0,2,1,1]
+    head = build_linked_list([1])
+    solution.reorderList(
+head
 
 
 
